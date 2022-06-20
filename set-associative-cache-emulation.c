@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <math.h>
 
 #define RAM_size				0xFF + 1
@@ -70,15 +71,16 @@ void print_binary_byte(uint8_t byte)	{
 
 void dump(void **ptr, int size, char name[])	{
     int i;
-    char str[0xF * 3] = {'\0'};
+    char str[0x10 * 3] = {'\0'};
 
     printf("Hex dump of %s:\n", name);
+    printf("       0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F\n");
     for(i = 0; i < size; i++)      {
-        if(i % 0xF == 0 && i != 0)      printf("%s\n", str);
-    	if(i % 0xF == 0)	printf("%04X", (unsigned int)i);
-        sprintf(&str[(i % 0xF) * 3], " %02X", (unsigned int)(((uint8_t*)(&*ptr))[i]));
+        if(i % 0x10 == 0 && i != 0)      printf("%s\n", str);
+        if(i % 0x10 == 0)	printf("%*X:", 4, (unsigned int)i);
+        sprintf(&str[(i % 0x10) * 3], " %02X", (unsigned int)(((uint8_t*)(&*ptr))[i]));
     }
-    if(i % 0xF != 0)         printf("%s\n", str);
+    printf("%s\n", str);
 }
 
 void dump_CAM(void)	{
